@@ -1,6 +1,6 @@
 ---
 layout: page
-title: mint
+title: Mint
 permalink: /mint/
 title2: 小薄荷
 ---
