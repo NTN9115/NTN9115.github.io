@@ -22,7 +22,7 @@ bartitle: ahih=najala-an-uiir;
 title: NOTE
 # email: your-email@example.com
 description: >- # this means to ignore newlines until "baseurl:"
-  never stop
+  stop
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://NTN9115.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: tn3323
