@@ -1,0 +1,166 @@
+---
+layout: post
+title:  "i3 wm 环境配置"
+date:   2020-07-27 21:15:38 +0800
+categories: wm i3
+typora-root-url: ..
+---
+
+本来一开始是想搞sway的，然后搞着搞着发现毛病还是真的多，就算了呗，换i3，反正这两者也差球不多。
+
+1. 安装输入法
+
+    背时的输入法每次都坑我，这次坑就坑在没把ibus相关的东西杀绝在```~/.config/autostart/```目录下自己写了个ibus的启动，一直忘删了，到最后才想起来，删了基本上就对了。。
+
+    然后就可以开始安装fcitx5了，
+
+    ```bash
+    sudo pacman -S fcitx5 fcitx5-chinese-addons fcitx5-gtk fcitx5-material-color fcitx5-qt fcitx5-rime
+    ```
+
+    然后环境变量配一下下放到 ```~/.pam_environment```文件里面,配置如下
+    ```
+    INPUT_METHOD  DEFAULT=fcitx5
+    GTK_IM_MODULE DEFAULT=fcitx5
+    QT_IM_MODULE  DEFAULT=fcitx5
+    XMODIFIERS    DEFAULT=@im=fcitx5
+    ```
+
+2. 快捷键配置
+
+    键盘上调整亮度啊，音量的东西统统失效，要设置快捷键才行
+    于是拿着archwiki里面sway的配置抄袭哦
+
+    ```
+    bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+    bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+    bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+    bindsym XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+    bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
+    bindsym XF86MonBrightnessUp exec brightnessctl set +5%
+    bindsym XF86AudioPlay exec playerctl play-pause
+    bindsym XF86AudioNext exec playerctl next
+    bindsym XF86AudioPrev exec playerctl previous
+    ```
+
+    然后顺便调整一下下titlebar，难看死了，直接不要
+
+    ```
+    new_window pixel 0
+    ```
+
+    抄到```~/.config/i3/config```里面就可以了
+
+3. 缩放调整
+
+    鉴于自己笔记本现在2k屏幕，很多看东西非常难受啊，必须要调整一下。害这一点就是不如sway的地方了，调整缩放sway非常方便，不过也改变不了我对sway不能用的看法。不过这个设置也不难，也就加一个
+
+    ```bash
+    exec xrandr --dpi 220
+    ```
+    放到i3配置文件下就行了，多屏幕百分之百拉挎
+
+    然后是chrome，并没有按照想象中的情况缩放了，害需要调整一下启动参数来缩放，垃圾，改 ```.config/chrome-flags.conf```配置就行
+
+    ```config
+    --force-device-scale-factor=1.5
+    ```
+    差不多大小就行了
+
+4. 终端调整
+
+    用的alacritty，本来不想调的，但是着也太难受了，默认字体不对，那就顺便调一下把
+    ```yml
+    font:
+        size: 10
+    #Normal (roman) font face
+        normal:
+            family: monaco
+        bold:
+            family: monaco
+        italic:
+            family: monaco
+    colors:
+    #Default colors
+        primary:
+            background: '0x1b182c'
+            foreground: '0xcbe3e7'
+
+        # Normal colors
+        normal:
+            black:   '0x100e23'
+            red:     '0xff8080'
+            green:   '0x95ffa4'
+            yellow:  '0xffe9aa'
+            blue:    '0x91ddff'
+            magenta: '0xc991e1'
+            cyan:    '0xaaffe4'
+            white:   '0xcbe3e7'
+
+        # Bright colors
+        bright:
+            black:   '0x565575'
+            red:     '0xff5458'
+            green:   '0x62d196'
+            yellow:  '0xffb378'
+            blue:    '0x65b2ff'
+            magenta: '0x906cff'
+            cyan:    '0x63f2f1'
+            white:   '0xa6b3cc'
+    ```
+    主题抄的 <https://github.com/challenger-deep-theme/alacritty/blob/master/challenger-deep.yml> 
+    文件放在```~/.config/alacritty/alacritty.yml```
+
+5. i3status
+
+    鉴于原生的丑得哭，还是搞一下吧。。直接i3status-rust即可，配置文件如下
+
+    ```
+    theme = "space-villain"
+    icons = "awesome"
+
+    [[block]]
+    block = "disk_space"
+    path = "/"
+    alias = "/"
+    info_type = "available"
+    unit = "GB"
+    interval = 20
+    warning = 20.0
+    alert = 10.0
+
+    [[block]]
+    block = "memory"
+    display_type = "memory"
+    format_mem = "{Mup}%"
+    format_swap = "{SUp}%"
+
+    [[block]]
+    block = "cpu"
+    interval = 1
+
+    [[block]]
+    block = "load"
+    interval = 1
+    format = "{1m}"
+
+    [[block]]
+    block = "sound"
+
+    [[block]]
+    block = "time"
+    interval = 60
+    format = "%a %d/%m %R"
+    ```
+
+    放到```~/.config/i3status-rust/config.toml```还要记得改i3的bar配置改为i3status-rs
+
+6. 启动器
+
+    dmenu还是不行哦，于是用rofi看上去感觉还行
+
+    ```
+    bindsym $mod+d exec "rofi -combi-modi window,drun,ssh  -font 'monaco 24' -show combi"
+
+    ```
+    改改i3配置，完事！
