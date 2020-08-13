@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "i3 wm 环境配置"
-date:   2020-07-27 21:15:38 +0800
+date:   2020-08-11 21:15:38 +0800
 categories: wm i3
 typora-root-url: ..
 ---
