@@ -70,3 +70,5 @@ dtoverlay=gpio-ir-tx,gpio_pin=17
 ```
 
 其他选项默认值即可，重启，然后```/dev/lirc0```就出现了。
+
+https://raspberrypi.stackexchange.com/questions/81876/raspberry-pi-3-not-lirc-not-running-working
